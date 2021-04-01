@@ -29,11 +29,11 @@
  */
 
 /**
- *  @file ArrayList.php
+ *  @file Stack.php
  *
- *  The Array List class is like a PHP native array
+ *  The Stack class
  *
- *  @package    Platine\Collection\Generic
+ *  @package    Platine\Collection\Stack
  *  @author Platine Developers Team
  *  @copyright  Copyright (c) 2020
  *  @license    http://opensource.org/licenses/MIT  MIT License
@@ -44,24 +44,21 @@
 
 declare(strict_types=1);
 
-namespace Platine\Collection\Generic;
+namespace Platine\Collection\Stack;
 
-use Platine\Collection\BaseCollection;
-use Platine\Collection\CollectionInterface;
-use Platine\Collection\IterableInterface;
-use Platine\Collection\MergeableInterface;
-use Platine\Collection\SortableInterface;
+use Countable;
 
 /**
- * Class ArrayList
- * @package Platine\Collection\Generic
+ * Class Stack
+ * @package Platine\Collection\Stack
  */
-class ArrayList extends BaseCollection implements
-    CollectionInterface,
-    IterableInterface,
-    MergeableInterface,
-    SortableInterface
+class Stack implements Countable
 {
 
-
+    /**
+     * {@inheritedoc}
+     */
+    public function count(): int
+    {
+    }
 }

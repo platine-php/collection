@@ -46,11 +46,18 @@ declare(strict_types=1);
 
 namespace Platine\Collection\Map;
 
+use Platine\Collection\BaseCollection;
+use Platine\Collection\MergeableInterface;
+use Platine\Collection\SortableInterface;
+
 /**
  * Class HashMap
  * @package Platine\Collection\Map
  */
-class HashMap
+class HashMap extends BaseCollection implements
+    MapInterface,
+    MergeableInterface,
+    SortableInterface
 {
 
 

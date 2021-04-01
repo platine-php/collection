@@ -29,9 +29,9 @@
  */
 
 /**
- *  @file Collection.php
+ *  @file DataContainer.php
  *
- *  The Collection class
+ *  The Data Container class contains the raw collection data
  *
  *  @package    Platine\Collection
  *  @author Platine Developers Team
@@ -46,16 +46,93 @@ declare(strict_types=1);
 
 namespace Platine\Collection;
 
+use ArrayAccess;
+use ArrayIterator;
+use IteratorAggregate;
+
 /**
- * Class Collection
+ * Class DataContainer
  * @package Platine\Collection
  */
-class Collection extends BaseCollection implements
-    ObjectCollectionInterface,
-    IterableInterface,
-    MergeableInterface,
-    SortableInterface
+class DataContainer implements ArrayAccess, IteratorAggregate
 {
 
+    /**
+     *
+     * @var array<mixed, mixed>
+     */
+    protected array $data = [];
 
+    /**
+     * Create new instance
+     * @param array<mixed, mixed> $data
+     */
+    public function __construct(array $data = [])
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * Return the data in the container
+     * @return array<mixed, mixed>
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * Set the data container
+     * @param array<mixed, mixed> $data
+     * @return $this
+     */
+    public function setData(array $data): self
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+
+    /**
+     * {@inheritedoc}
+     */
+    public function getIterator(): ArrayIterator
+    {
+        return new ArrayIterator($this->data);
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function offsetExists($offset): bool
+    {
+        return isset($this->data[$offset]);
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function offsetGet($offset)
+    {
+        return isset($this->data[$offset])
+                ? $this->data[$offset]
+                : null;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function offsetSet($offset, $value): void
+    {
+        $this->data[$offset] = $value;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function offsetUnset($offset): void
+    {
+        unset($this->data[$offset]);
+    }
 }

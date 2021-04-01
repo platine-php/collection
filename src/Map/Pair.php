@@ -29,11 +29,11 @@
  */
 
 /**
- *  @file ArrayList.php
+ *  @file Pair.php
  *
- *  The Array List class is like a PHP native array
+ *  The Pair class
  *
- *  @package    Platine\Collection\Generic
+ *  @package    Platine\Collection\Map
  *  @author Platine Developers Team
  *  @copyright  Copyright (c) 2020
  *  @license    http://opensource.org/licenses/MIT  MIT License
@@ -44,23 +44,13 @@
 
 declare(strict_types=1);
 
-namespace Platine\Collection\Generic;
-
-use Platine\Collection\BaseCollection;
-use Platine\Collection\CollectionInterface;
-use Platine\Collection\IterableInterface;
-use Platine\Collection\MergeableInterface;
-use Platine\Collection\SortableInterface;
+namespace Platine\Collection\Map;
 
 /**
- * Class ArrayList
- * @package Platine\Collection\Generic
+ * Class Pair
+ * @package Platine\Collection\Map
  */
-class ArrayList extends BaseCollection implements
-    CollectionInterface,
-    IterableInterface,
-    MergeableInterface,
-    SortableInterface
+class Pair
 {
 
 

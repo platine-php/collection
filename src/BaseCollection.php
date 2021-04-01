@@ -29,11 +29,11 @@
  */
 
 /**
- *  @file ArrayList.php
+ *  @file BaseCollection.php
  *
- *  The Array List class is like a PHP native array
+ *  The BaseCollection class
  *
- *  @package    Platine\Collection\Generic
+ *  @package    Platine\Collection
  *  @author Platine Developers Team
  *  @copyright  Copyright (c) 2020
  *  @license    http://opensource.org/licenses/MIT  MIT License
@@ -44,24 +44,29 @@
 
 declare(strict_types=1);
 
-namespace Platine\Collection\Generic;
+namespace Platine\Collection;
 
-use Platine\Collection\BaseCollection;
-use Platine\Collection\CollectionInterface;
-use Platine\Collection\IterableInterface;
-use Platine\Collection\MergeableInterface;
-use Platine\Collection\SortableInterface;
+use Countable;
+use JsonSerializable;
 
 /**
- * Class ArrayList
- * @package Platine\Collection\Generic
+ * Class BaseCollection
+ * @package Platine\Collection
  */
-class ArrayList extends BaseCollection implements
-    CollectionInterface,
-    IterableInterface,
-    MergeableInterface,
-    SortableInterface
+abstract class BaseCollection implements Countable, JsonSerializable
 {
 
+    /**
+     * {@inheritedoc}
+     */
+    public function count(): int
+    {
+    }
 
+    /**
+     * {@inheritedoc}
+     */
+    public function jsonSerialize()
+    {
+    }
 }
