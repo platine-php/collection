@@ -29,9 +29,9 @@
  */
 
 /**
- *  @file ObjectCollectionInterface.php
+ *  @file TypedCollection.php
  *
- *  The ObjectCollectionInterface class
+ *  The Collection with strict type class
  *
  *  @package    Platine\Collection
  *  @author Platine Developers Team
@@ -46,11 +46,44 @@ declare(strict_types=1);
 
 namespace Platine\Collection;
 
+use OutOfRangeException;
+use Platine\Collection\Exception\InvalidOperationException;
+
 /**
- * Class ObjectCollectionInterface
+ * Class TypedCollection
  * @package Platine\Collection
+ * @template T
+ * @extends Collection<T>
  */
-interface ObjectCollectionInterface
+class TypedCollection extends Collection
 {
 
+    /**
+     * Create new instance
+     * @param string $type
+     * @param mixed ...$data
+     */
+    public function __construct(string $type, ...$data)
+    {
+        $this->type = $type;
+        parent::__construct(...$data);
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    protected function validateEntry($value): bool
+    {
+        TypeCheck::isValueOf(
+            $value,
+            $this->type,
+            sprintf(
+                'The type specified for this collection is [%s], you cannot pass a value of type [%s]',
+                $this->type,
+                is_object($value) ? get_class($value) : gettype($value)
+            )
+        );
+
+        return true;
+    }
 }

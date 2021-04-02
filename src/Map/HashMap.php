@@ -46,13 +46,20 @@ declare(strict_types=1);
 
 namespace Platine\Collection\Map;
 
+use OutOfRangeException;
 use Platine\Collection\BaseCollection;
+use Platine\Collection\Exception\InvalidOperationException;
 use Platine\Collection\MergeableInterface;
 use Platine\Collection\SortableInterface;
+use Platine\Collection\TypeCheck;
 
 /**
  * Class HashMap
  * @package Platine\Collection\Map
+ * @template T
+ * @extends BaseCollection<T>
+ * @implements MergeableInterface<T>
+ * @implements SortableInterface<T>
  */
 class HashMap extends BaseCollection implements
     MapInterface,
@@ -60,5 +67,359 @@ class HashMap extends BaseCollection implements
     SortableInterface
 {
 
+    /**
+     * The type of the key
+     * @var mixed
+     */
+    protected $keyType;
 
+    /**
+     * The type of the value
+     * @var mixed
+     */
+    protected $valueType;
+
+    /**
+     * Create new instance
+     * @param mixed $keyType
+     * @param mixed $valueType
+     * @param array<mixed, mixed> $initials
+     */
+    public function __construct($keyType, $valueType, array $initials = [])
+    {
+        $this->keyType = $keyType;
+        $this->valueType = $valueType;
+
+        foreach ($initials as $key => $value) {
+            $this->validateEntry($key, $value);
+        }
+
+        parent::__construct($initials);
+        $this->initializePairs($initials);
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function add($key, $value): void
+    {
+        $this->validateEntry($key, $value);
+        $this->data->offsetSet($key, new Pair($key, $value));
+    }
+
+    /**
+     *
+     * @param HashMap<T> $collection
+     * @return HashMap<T>
+     * @throws InvalidOperationException
+     */
+    public function diff(BaseCollection $collection): BaseCollection
+    {
+        if (!$collection instanceof self) {
+            throw new InvalidOperationException(
+                'You should only compare a Map against another Map'
+            );
+        }
+
+        if ($this->keyType !== $collection->getKeyType()) {
+            throw new InvalidOperationException(sprintf(
+                'The key type for this map is [%s], you cannot pass a map with [%s] as key type',
+                $this->keyType,
+                $collection->getKeyType()
+            ));
+        }
+
+        if ($this->valueType !== $collection->getValueType()) {
+            throw new InvalidOperationException(sprintf(
+                'The value type for this map is [%s], you cannot pass a map with [%s] as value type',
+                $this->keyType,
+                $collection->getKeyType()
+            ));
+        }
+
+        $diffValues = array_udiff_uassoc(
+            $this->all(),
+            $collection->all(),
+            function ($a, $b) {
+                return $a <=> $b;
+            },
+            function ($c, $d) {
+                return $c <=> $d;
+            }
+        );
+
+        return new self($this->keyType, $this->valueType, $diffValues);
+    }
+
+    /**
+     * Return the type of the key
+     * @return mixed
+     */
+    public function getKeyType()
+    {
+        return $this->keyType;
+    }
+
+    /**
+     * Return the type of the value
+     * @return mixed
+     */
+    public function getValueType()
+    {
+        return $this->valueType;
+    }
+
+    /**
+     *
+     * @param array<mixed, mixed> $data
+     * @return void
+     */
+    public function fill(array $data): void
+    {
+        foreach ($data as $key => $value) {
+            $this->add($key, $value);
+        }
+    }
+
+    /**
+     *
+     * @param callable $callback
+     * @return $this|null
+     */
+    public function filter(callable $callback): ?self
+    {
+        $matches = [];
+
+        foreach ($this->data as $key => $value) {
+            $val = call_user_func($callback, $value->getKey(), $value->getValue());
+            if ($val === true) {
+                $matches[$value->getKey()] = $value->getValue();
+            }
+        }
+
+        return count($matches) > 0
+                ? new $this($this->keyType, $this->valueType, $matches)
+                : null;
+    }
+
+    /**
+     *
+     * @param callable $callback
+     * @return $this|null
+     */
+    public function map(callable $callback): ?self
+    {
+        $matches = array_map($callback, $this->all());
+
+        return count($matches) > 0
+                ? new $this($this->keyType, $this->valueType, $this->all())
+                : null;
+    }
+
+     /**
+     * {@inheritedoc}
+     */
+    public function equals(BaseCollection $collection): bool
+    {
+        if (!$collection instanceof self) {
+            throw new InvalidOperationException(
+                'You should only compare an map against another map'
+            );
+        }
+
+        return $this->all() == $collection->all();
+    }
+
+    /**
+     *
+     * @param callable $callback
+     * @return void
+     */
+    public function forEach(callable $callback): void
+    {
+        $data = $this->all();
+        array_walk($data, $callback);
+
+        $this->initializePairs($data);
+    }
+
+     /**
+     * {@inheritedoc}
+     */
+    public function get($key)
+    {
+        return $this->data->offsetExists($key)
+               ? $this->data->offsetGet($key)->getValue()
+               : null;
+    }
+
+     /**
+     * {@inheritedoc}
+      * @param HashMap<T> $collection
+     */
+    public function merge(BaseCollection $collection): BaseCollection
+    {
+        TypeCheck::isEqual(
+            $this->getKeyType(),
+            $collection->getKeyType(),
+            sprintf(
+                'The new map key should be of type %s',
+                $this->keyType
+            )
+        );
+
+        TypeCheck::isEqual(
+            $this->getValueType(),
+            $collection->getValueType(),
+            sprintf(
+                'The new map value should be of type %s',
+                $this->valueType
+            )
+        );
+
+        return new $this(
+            $this->keyType,
+            $this->valueType,
+            array_merge($this->all(), $collection->all())
+        );
+    }
+
+     /**
+     * {@inheritedoc}
+     */
+    public function remove($key): void
+    {
+        if ($this->isEmpty()) {
+            throw new OutOfRangeException('The collection is empty');
+        }
+
+        if (!$this->data->offsetExists($key)) {
+            throw new OutOfRangeException(sprintf(
+                'The collection key [%s] does not exists',
+                $key
+            ));
+        }
+
+        $this->data->offsetUnset($key);
+    }
+
+     /**
+     * {@inheritedoc}
+     */
+    public function slice(int $offset, ?int $length): ?BaseCollection
+    {
+        $newData = array_slice($this->all(), $offset, $length, true);
+
+        return count($newData) > 0
+            ? new $this(
+                $this->keyType,
+                $this->valueType,
+                $newData
+            )
+            : null;
+    }
+
+     /**
+     * {@inheritedoc}
+     */
+    public function sort(callable $callback): ?BaseCollection
+    {
+        $data = $this->all();
+
+        return uasort($data, $callback)
+                ? new $this(
+                    $this->keyType,
+                    $this->valueType,
+                    $data
+                )
+                : null;
+    }
+
+     /**
+     * {@inheritedoc}
+     */
+    public function update($key, $value): bool
+    {
+        $this->validateEntry($key, $value);
+
+        if (!$this->data->offsetExists($key)) {
+            throw new OutOfRangeException(sprintf(
+                'The collection key [%s] does not exists',
+                $key
+            ));
+        }
+
+        $this->data[$key]->setValue($value);
+
+        return $this->data[$key]->getValue() === $value;
+    }
+
+    /**
+     *
+     * @return array<mixed, mixed>
+     */
+    public function all(): array
+    {
+        $data = [];
+        foreach ($this->data as $pair) {
+            $data[$pair->getKey()] = $pair->getValue();
+        }
+
+        return $data;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function toJson(): string
+    {
+        $json = json_encode($this->data);
+        return $json === false ? '' : $json;
+    }
+
+
+    /**
+     * Validate the type of key and value
+     * @param mixed $key
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    protected function validateEntry($key, $value): bool
+    {
+        TypeCheck::isValueOf(
+            $key,
+            $this->keyType,
+            sprintf(
+                'The key type specified for this map is [%s], you cannot pass [%s]',
+                $this->keyType,
+                gettype($key)
+            )
+        );
+
+        TypeCheck::isValueOf(
+            $key,
+            $this->valueType,
+            sprintf(
+                'The value type specified for this map is [%s], you cannot pass [%s]',
+                $this->valueType,
+                gettype($value)
+            )
+        );
+
+        return false;
+    }
+
+    /**
+     * Initialize the pair values
+     * @param array<mixed, mixed> $data
+     * @return void
+     */
+    protected function initializePairs(array $data): void
+    {
+        foreach ($data as $key => $value) {
+            $this->data[$key] = new Pair($key, $value);
+        }
+    }
 }

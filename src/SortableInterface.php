@@ -49,8 +49,15 @@ namespace Platine\Collection;
 /**
  * Class SortableInterface
  * @package Platine\Collection
+ * @template T
  */
 interface SortableInterface
 {
 
+    /**
+     * Sort the collection
+     * @param callable $callback
+     * @return BaseCollection<T>|null
+     */
+    public function sort(callable $callback): ?BaseCollection;
 }

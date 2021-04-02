@@ -46,8 +46,10 @@ declare(strict_types=1);
 
 namespace Platine\Collection\Generic;
 
+use OutOfRangeException;
 use Platine\Collection\BaseCollection;
 use Platine\Collection\CollectionInterface;
+use Platine\Collection\Exception\InvalidOperationException;
 use Platine\Collection\IterableInterface;
 use Platine\Collection\MergeableInterface;
 use Platine\Collection\SortableInterface;
@@ -55,6 +57,10 @@ use Platine\Collection\SortableInterface;
 /**
  * Class ArrayList
  * @package Platine\Collection\Generic
+ * @template T
+ * @extends BaseCollection<T>
+ * @implements MergeableInterface<T>
+ * @implements SortableInterface<T>
  */
 class ArrayList extends BaseCollection implements
     CollectionInterface,
@@ -63,5 +69,217 @@ class ArrayList extends BaseCollection implements
     SortableInterface
 {
 
+    /**
+     * {@inheritedoc}
+     */
+    public function add($value): void
+    {
+        $data = $this->all();
 
+        array_push($data, $value);
+        $this->data->setData($data);
+    }
+
+    /**
+     * Fill the collection
+     * @param array<mixed, mixed> $data
+     * @return void
+     */
+    public function fill(array $data): void
+    {
+        foreach ($data as $value) {
+            $this->add($value);
+        }
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function diff(BaseCollection $collection): BaseCollection
+    {
+        if (!$collection instanceof self) {
+            throw new InvalidOperationException(
+                'You should only compare an ArrayList against another ArrayList'
+            );
+        }
+
+        $diffValues = array_udiff(
+            $this->all(),
+            $collection->all(),
+            function ($a, $b) {
+                if (gettype($a) !== gettype($b)) {
+                    return -1;
+                }
+
+                return $a <=> $b;
+            }
+        );
+
+        return new $this($diffValues);
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function equals(BaseCollection $collection): bool
+    {
+        if (!$collection instanceof self) {
+            throw new InvalidOperationException(
+                'You should only compare an ArrayList against another ArrayList'
+            );
+        }
+
+        return $this->all() == $collection->all();
+    }
+
+    /**
+     *
+     * @param callable $callback
+     * @return $this|null
+     */
+    public function filter(callable $callback): ?self
+    {
+        $matches = [];
+
+        foreach ($this->data as $value) {
+            $val = call_user_func($callback, $value);
+            if ($val === true) {
+                $matches[] = $value;
+            }
+        }
+
+        return count($matches) > 0
+                ? new $this(array_values($matches))
+                : null;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function forEach(callable $callback): void
+    {
+        $data = $this->all();
+        array_walk($data, $callback);
+
+        $this->data->setData($data);
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function get(int $offset)
+    {
+        return $this->data->offsetGet($offset);
+    }
+
+    /**
+     *
+     * @param callable $callback
+     * @return $this|null
+     */
+    public function map(callable $callback): ?self
+    {
+        $matches = array_map($callback, $this->all());
+
+        return count($matches) > 0
+                ? new $this(array_values($matches))
+                : null;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function merge(BaseCollection $collection): BaseCollection
+    {
+        return new $this(array_merge($this->all(), $collection->all()));
+    }
+
+    /**
+     * Return a random element of the collection
+     * @return mixed
+     */
+    public function rand()
+    {
+        if ($this->isEmpty()) {
+            throw new InvalidOperationException('The collection is empty');
+        }
+
+        /** @var int $offset */
+        $offset = array_rand($this->all());
+
+        return $this->get($offset);
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function remove(int $offset): void
+    {
+        if ($this->isEmpty()) {
+            throw new OutOfRangeException('The collection is empty');
+        }
+
+        if (!$this->data->offsetExists($offset)) {
+            throw new OutOfRangeException(sprintf(
+                'The collection index [%d] does not exists',
+                $offset
+            ));
+        }
+
+        $this->data->offsetUnset($offset);
+    }
+
+    /**
+     *
+     * @return $this
+     */
+    public function reverse(): self
+    {
+        if ($this->isEmpty()) {
+            throw new InvalidOperationException('The collection is empty');
+        }
+
+        return new $this(array_reverse($this->all()));
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function slice(int $offset, ?int $length): ?BaseCollection
+    {
+        $newData = array_slice($this->all(), $offset, $length);
+
+        return count($newData) > 0
+                ? new $this($newData)
+                : null;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function sort(callable $callback): ?BaseCollection
+    {
+        $data = $this->all();
+
+        return usort($data, $callback)
+                ? new $this($data)
+                : null;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function update(int $offset, $value): bool
+    {
+        if (!$this->exists($offset)) {
+            throw new InvalidOperationException(sprintf(
+                'The collection index [%d] does not exists',
+                $offset
+            ));
+        }
+
+        $this->data->offsetSet($offset, $value);
+
+        return $this->data->offsetGet($offset) === $value;
+    }
 }

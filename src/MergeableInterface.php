@@ -49,8 +49,15 @@ namespace Platine\Collection;
 /**
  * Class MergeableInterface
  * @package Platine\Collection
+ * @template T
  */
 interface MergeableInterface
 {
 
+    /**
+     * Merge with the given collection
+     * @param BaseCollection<T> $collection
+     * @return BaseCollection<T>
+     */
+    public function merge(BaseCollection $collection): BaseCollection;
 }

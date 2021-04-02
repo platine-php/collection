@@ -53,4 +53,32 @@ namespace Platine\Collection;
 interface CollectionInterface
 {
 
+    /**
+     * Add element to the collection
+     * @param mixed $value
+     * @return void
+     */
+    public function add($value): void;
+
+    /**
+     * Get the element at the given index
+     * @param int $offset
+     * @return mixed
+     */
+    public function get(int $offset);
+
+    /**
+     * Remove the element at the given index
+     * @param int $offset
+     * @return void
+     */
+    public function remove(int $offset): void;
+
+    /**
+     * Update
+     * @param int $offset
+     * @param mixed $value
+     * @return bool
+     */
+    public function update(int $offset, $value): bool;
 }

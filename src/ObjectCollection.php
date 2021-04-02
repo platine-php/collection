@@ -29,9 +29,9 @@
  */
 
 /**
- *  @file IterableInterface.php
+ *  @file ObjectCollection.php
  *
- *  The IterableInterface class
+ *  The Collection with type of object class
  *
  *  @package    Platine\Collection
  *  @author Platine Developers Team
@@ -47,16 +47,20 @@ declare(strict_types=1);
 namespace Platine\Collection;
 
 /**
- * Class IterableInterface
+ * Class ObjectCollection
  * @package Platine\Collection
+ * @template Object
+ * @extends TypedCollection<Object>
  */
-interface IterableInterface
+class ObjectCollection extends TypedCollection
 {
 
     /**
-     * Loop on each collection element with the given callback
-     * @param callable $callback
-     * @return void
+     * Create new instance
+     * @param mixed ...$data
      */
-    public function forEach(callable $callback): void;
+    public function __construct(...$data)
+    {
+        parent::__construct('object', ...$data);
+    }
 }

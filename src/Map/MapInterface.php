@@ -53,4 +53,33 @@ namespace Platine\Collection\Map;
 interface MapInterface
 {
 
+    /**
+     * Add element to the collection
+     * @param mixed $key
+     * @param mixed $value
+     * @return void
+     */
+    public function add($key, $value): void;
+
+    /**
+     * Get the element for the given key
+     * @param mixed $key
+     * @return mixed
+     */
+    public function get($key);
+
+    /**
+     * Remove the element for the given key
+     * @param mixed $key
+     * @return void
+     */
+    public function remove($key): void;
+
+    /**
+     * Update the element
+     * @param mixed $key
+     * @param mixed $value
+     * @return bool
+     */
+    public function update($key, $value): bool;
 }

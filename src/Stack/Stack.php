@@ -47,6 +47,8 @@ declare(strict_types=1);
 namespace Platine\Collection\Stack;
 
 use Countable;
+use Platine\Collection\Exception\InvalidOperationException;
+use Platine\Collection\TypeCheck;
 
 /**
  * Class Stack
@@ -56,9 +58,95 @@ class Stack implements Countable
 {
 
     /**
+     *
+     * @var string
+     */
+    protected string $type;
+
+    /**
+     *
+     * @var array<int, mixed>
+     */
+    protected array $data;
+
+    /**
+     * Create new instance
+     * @param string $type
+     */
+    public function __construct(string $type)
+    {
+        $this->data = [];
+        $this->type = $type;
+    }
+
+    /**
+     *
+     * @return void
+     */
+    public function clear(): void
+    {
+        $this->data = [];
+    }
+
+    /**
      * {@inheritedoc}
      */
     public function count(): int
     {
+        return count($this->data);
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function peek()
+    {
+        if ($this->isEmpty()) {
+            throw new InvalidOperationException('The collection is empty');
+        }
+
+        return $this->data[$this->count() - 1];
+    }
+
+    /**
+     *
+     * @return mixed
+     */
+    public function pop()
+    {
+        return array_pop($this->data);
+    }
+
+
+    /**
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    public function push($value)
+    {
+        TypeCheck::isValueOf(
+            $value,
+            $this->type,
+            sprintf(
+                'The type specified for this collection is [%s], '
+                    . 'you cannot pass a value of type [%s]',
+                $this->type,
+                gettype($value)
+            )
+        );
+
+        $this->data[] = $value;
+
+        return $value;
     }
 }

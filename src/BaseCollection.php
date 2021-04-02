@@ -48,25 +48,173 @@ namespace Platine\Collection;
 
 use Countable;
 use JsonSerializable;
+use OutOfRangeException;
+use Platine\Collection\Exception\InvalidOperationException;
+use ArrayIterator;
 
 /**
  * Class BaseCollection
  * @package Platine\Collection
+ * @template T
  */
 abstract class BaseCollection implements Countable, JsonSerializable
 {
+
+    /**
+     * The data container instance
+     * @var DataContainer<T>
+     */
+    protected DataContainer $data;
+
+    /**
+     * Create new instance
+     * @param array<mixed, mixed> $initials
+     */
+    public function __construct(array $initials = [])
+    {
+        $this->data = new DataContainer($initials);
+    }
+
+    /**
+     * Clear the collection data
+     * @return void
+     */
+    public function clear(): void
+    {
+        $this->data = new DataContainer([]);
+    }
+
+    /**
+     * Check whether the collection has the given element
+     * @param mixed $needle
+     * @return bool
+     */
+    public function contains($needle): bool
+    {
+        return in_array($needle, $this->all());
+    }
+
+    /**
+     *
+     * @param mixed $offset
+     * @return bool
+     */
+    public function exists($offset): bool
+    {
+        return $this->data->offsetExists($offset);
+    }
+
+    /**
+     * Return the first element of collection
+     * @return mixed
+     */
+    public function first()
+    {
+        if ($this->isEmpty()) {
+            throw new OutOfRangeException('The collection is empty');
+        }
+        $values = $this->all();
+
+        return $values[0];
+    }
+
+    /**
+     * Return the last element of collection
+     * @return mixed
+     */
+    public function last()
+    {
+        if ($this->isEmpty()) {
+            throw new OutOfRangeException('The collection is empty');
+        }
+        $values = $this->all();
+
+        return $values[$this->count() - 1];
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
+    }
+
+    /**
+     * Return the sum of the collection element
+     * @param callable $callback
+     * @return float
+     */
+    public function sum(callable $callback): float
+    {
+        $sum = 0;
+        foreach ($this->data as $value) {
+            $val = call_user_func($callback, $value);
+            if (!is_numeric($val)) {
+                throw new InvalidOperationException(
+                    'You cannot sum non-numeric values'
+                );
+            }
+
+            $sum += $val;
+        }
+
+        return $sum;
+    }
+
+    /**
+     * Return the array representation of the collection
+     * @return array<mixed, mixed>
+     */
+    public function all(): array
+    {
+        return $this->data->getData();
+    }
 
     /**
      * {@inheritedoc}
      */
     public function count(): int
     {
+        return count($this->all());
     }
 
     /**
      * {@inheritedoc}
+     * @return array<mixed, mixed>
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
+        return $this->all();
     }
+
+    /**
+     * Return the different with the given collection
+     * @param BaseCollection<T> $collection
+     * @return $this<T>
+     */
+    abstract public function diff(BaseCollection $collection): self;
+
+    /**
+     * Whether two collections are equal
+     * @param BaseCollection<T> $collection
+     * @return bool
+     */
+    abstract public function equals(BaseCollection $collection): bool;
+
+    /**
+     * Returns a portion of the collection.
+     * @param int $offset
+     * @param int|null $length
+     * @return null|$this
+     */
+    abstract public function slice(int $offset, ?int $length): ?self;
+
+    /**
+     * Fill the collection
+     * @param array<mixed, mixed> $data
+     * @return void
+     */
+    abstract public function fill(array $data): void;
 }

@@ -53,6 +53,9 @@ use IteratorAggregate;
 /**
  * Class DataContainer
  * @package Platine\Collection
+ * @template T
+ * @implements ArrayAccess<mixed, T>
+ * @implements IteratorAggregate<mixed, T>
  */
 class DataContainer implements ArrayAccess, IteratorAggregate
 {
@@ -95,7 +98,8 @@ class DataContainer implements ArrayAccess, IteratorAggregate
 
 
     /**
-     * {@inheritedoc}
+     *
+     * @return ArrayIterator<mixed, T>
      */
     public function getIterator(): ArrayIterator
     {
@@ -103,7 +107,9 @@ class DataContainer implements ArrayAccess, IteratorAggregate
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param mixed $offset
+     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -111,7 +117,9 @@ class DataContainer implements ArrayAccess, IteratorAggregate
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param mixed $offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
@@ -121,7 +129,10 @@ class DataContainer implements ArrayAccess, IteratorAggregate
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param mixed $offset
+     * @param mixed $value
+     * @return void
      */
     public function offsetSet($offset, $value): void
     {
@@ -129,7 +140,9 @@ class DataContainer implements ArrayAccess, IteratorAggregate
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param mixed $offset
+     * @return void
      */
     public function offsetUnset($offset): void
     {
