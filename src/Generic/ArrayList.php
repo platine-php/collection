@@ -245,7 +245,7 @@ class ArrayList extends BaseCollection implements
     /**
      * {@inheritedoc}
      */
-    public function slice(int $offset, ?int $length): ?BaseCollection
+    public function slice(int $offset, ?int $length = null): ?BaseCollection
     {
         $newData = array_slice($this->all(), $offset, $length);
 

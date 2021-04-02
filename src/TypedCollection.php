@@ -61,12 +61,12 @@ class TypedCollection extends Collection
     /**
      * Create new instance
      * @param string $type
-     * @param mixed ...$data
+     * @param array<mixed, mixed> $data
      */
-    public function __construct(string $type, ...$data)
+    public function __construct(string $type, array $data = [])
     {
         $this->type = $type;
-        parent::__construct(...$data);
+        parent::__construct($data);
     }
 
     /**

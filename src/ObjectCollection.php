@@ -57,10 +57,10 @@ class ObjectCollection extends TypedCollection
 
     /**
      * Create new instance
-     * @param mixed ...$data
+     * @param array<mixed, mixed> $data
      */
-    public function __construct(...$data)
+    public function __construct(array $data = [])
     {
-        parent::__construct('object', ...$data);
+        parent::__construct('object', $data);
     }
 }

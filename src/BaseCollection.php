@@ -209,7 +209,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
      * @param int|null $length
      * @return null|$this
      */
-    abstract public function slice(int $offset, ?int $length): ?self;
+    abstract public function slice(int $offset, ?int $length = null): ?self;
 
     /**
      * Fill the collection

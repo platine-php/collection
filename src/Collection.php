@@ -71,15 +71,15 @@ class Collection extends BaseCollection implements
 
     /**
      * Create new instance
-     * @param mixed ...$data
+     * @param array<mixed, mixed> $data
      */
-    public function __construct(...$data)
+    public function __construct(array $data = [])
     {
         foreach ($data as $value) {
             $this->validateEntry($value);
         }
 
-        parent::__construct(...$data);
+        parent::__construct($data);
     }
 
     /**
@@ -171,7 +171,7 @@ class Collection extends BaseCollection implements
             }
         );
 
-        return new $this(...$diffValues);
+        return new $this($diffValues);
     }
 
     /**
@@ -227,7 +227,7 @@ class Collection extends BaseCollection implements
         }
 
         return count($matches) > 0
-                ? new $this(...array_values($matches))
+                ? new $this(array_values($matches))
                 : null;
     }
 
@@ -252,7 +252,7 @@ class Collection extends BaseCollection implements
         $matches = array_map($callback, $this->all());
 
         return count($matches) > 0
-                ? new $this(...array_values($matches))
+                ? new $this(array_values($matches))
                 : null;
     }
 
@@ -261,7 +261,7 @@ class Collection extends BaseCollection implements
      */
     public function merge(BaseCollection $collection): BaseCollection
     {
-        return new $this(...array_merge($this->all(), $collection->all()));
+        return new $this(array_merge($this->all(), $collection->all()));
     }
 
     /**
@@ -308,12 +308,12 @@ class Collection extends BaseCollection implements
      * @param int|null $length
      * @return $this<T>|null
      */
-    public function slice(int $offset, ?int $length): ?self
+    public function slice(int $offset, ?int $length = null): ?self
     {
         $newData = array_slice($this->all(), $offset, $length);
 
         return count($newData) > 0
-                ? new $this(...$newData)
+                ? new $this($newData)
                 : null;
     }
 
@@ -327,7 +327,7 @@ class Collection extends BaseCollection implements
         $data = $this->all();
 
         return usort($data, $callback)
-                ? new $this(...$data)
+                ? new $this($data)
                 : null;
     }
 
@@ -341,7 +341,7 @@ class Collection extends BaseCollection implements
             throw new InvalidOperationException('The collection is empty');
         }
 
-        return new $this(...array_reverse($this->all()));
+        return new $this(array_reverse($this->all()));
     }
 
     /**
