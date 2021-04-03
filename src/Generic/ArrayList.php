@@ -70,7 +70,9 @@ class ArrayList extends BaseCollection implements
 {
 
     /**
-     * {@inheritedoc}
+     *
+     * @param T $value
+     * @return void
      */
     public function add($value): void
     {
@@ -82,7 +84,7 @@ class ArrayList extends BaseCollection implements
 
     /**
      * Fill the collection
-     * @param array<mixed, mixed> $data
+     * @param array<int, T> $data
      * @return void
      */
     public function fill(array $data): void
@@ -93,7 +95,10 @@ class ArrayList extends BaseCollection implements
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param ArrayList<T> $collection
+     * @return ArrayList<T>
+     * @throws InvalidOperationException
      */
     public function diff(BaseCollection $collection): BaseCollection
     {
@@ -115,11 +120,14 @@ class ArrayList extends BaseCollection implements
             }
         );
 
-        return new $this($diffValues);
+        return new $this(array_values($diffValues));
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param ArrayList<T> $collection
+     * @return bool
+     * @throws InvalidOperationException
      */
     public function equals(BaseCollection $collection): bool
     {
@@ -165,7 +173,9 @@ class ArrayList extends BaseCollection implements
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param int $offset
+     * @return T|null
      */
     public function get(int $offset)
     {
@@ -187,7 +197,9 @@ class ArrayList extends BaseCollection implements
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param ArrayList<T> $collection
+     * @return ArrayList<T>
      */
     public function merge(BaseCollection $collection): BaseCollection
     {
@@ -196,7 +208,8 @@ class ArrayList extends BaseCollection implements
 
     /**
      * Return a random element of the collection
-     * @return mixed
+     * @return T|null
+     * @throws InvalidOperationException
      */
     public function rand()
     {
@@ -227,6 +240,7 @@ class ArrayList extends BaseCollection implements
         }
 
         $this->data->offsetUnset($offset);
+        $this->repopulate();
     }
 
     /**
@@ -243,7 +257,10 @@ class ArrayList extends BaseCollection implements
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param int $offset
+     * @param int|null $length
+     * @return ArrayList<T>|null
      */
     public function slice(int $offset, ?int $length = null): ?BaseCollection
     {
@@ -255,7 +272,9 @@ class ArrayList extends BaseCollection implements
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param callable $callback
+     * @return ArrayList<T>|null
      */
     public function sort(callable $callback): ?BaseCollection
     {
@@ -267,7 +286,11 @@ class ArrayList extends BaseCollection implements
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param int $offset
+     * @param T $value
+     * @return bool
+     * @throws InvalidOperationException
      */
     public function update(int $offset, $value): bool
     {

@@ -62,13 +62,13 @@ class DataContainer implements ArrayAccess, IteratorAggregate
 
     /**
      *
-     * @var array<mixed, mixed>
+     * @var array<mixed, T>
      */
     protected array $data = [];
 
     /**
      * Create new instance
-     * @param array<mixed, mixed> $data
+     * @param array<mixed, T> $data
      */
     public function __construct(array $data = [])
     {
@@ -77,7 +77,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
 
     /**
      * Return the data in the container
-     * @return array<mixed, mixed>
+     * @return array<mixed, T>
      */
     public function getData(): array
     {
@@ -86,7 +86,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
 
     /**
      * Set the data container
-     * @param array<mixed, mixed> $data
+     * @param array<mixed, T> $data
      * @return $this
      */
     public function setData(array $data): self

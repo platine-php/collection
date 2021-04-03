@@ -2,44 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Platine\Test\Collection;
+namespace Platine\Test\Collection\Generic;
 
-use InvalidArgumentException;
 use OutOfRangeException;
 use Platine\Collection\Collection;
 use Platine\Collection\Exception\InvalidOperationException;
 use Platine\Collection\Generic\ArrayList;
-use Platine\Collection\TypedCollection;
 use Platine\PlatineTestCase;
 use stdClass;
 
 /**
- * Collection class tests
+ * ArrayList class tests
  *
  * @group core
  * @group collection
  */
-class CollectionTest extends PlatineTestCase
+class ArrayListTest extends PlatineTestCase
 {
 
     public function testConstructor()
     {
         $data = [1];
-        $e = new Collection($data);
+        $e = new ArrayList($data);
         $this->assertCount(1, $e->all());
         $this->assertContains(1, $e->all());
-    }
-
-    public function testConstructorInvalidData()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $e = new Collection([1], 'bool');
     }
 
     public function testClear()
     {
         $data = [1];
-        $e = new Collection($data);
+        $e = new ArrayList($data);
         $this->assertCount(1, $e->all());
         $this->assertContains(1, $e->all());
 
@@ -50,7 +42,7 @@ class CollectionTest extends PlatineTestCase
     public function testJsonSerialize()
     {
         $data = [1];
-        $e = new Collection($data);
+        $e = new ArrayList($data);
 
         $json = $e->jsonSerialize();
 
@@ -61,7 +53,7 @@ class CollectionTest extends PlatineTestCase
     public function testContains()
     {
         $data = [1];
-        $e = new Collection($data);
+        $e = new ArrayList($data);
         $this->assertFalse($e->contains(10));
         $this->assertFalse($e->contains(2));
         $this->assertTrue($e->contains(1));
@@ -70,7 +62,7 @@ class CollectionTest extends PlatineTestCase
     public function testExists()
     {
         $data = [1];
-        $e = new Collection($data);
+        $e = new ArrayList($data);
         $this->assertFalse($e->exists(10));
         $this->assertFalse($e->exists(2));
         $this->assertTrue($e->exists(0));
@@ -79,7 +71,7 @@ class CollectionTest extends PlatineTestCase
     public function testFill()
     {
         $data = [1];
-        $e = new Collection();
+        $e = new ArrayList();
         $e->fill($data);
         $this->assertCount(1, $e->all());
         $this->assertContains(1, $e->all());
@@ -87,7 +79,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testAdd()
     {
-        $e = new Collection();
+        $e = new ArrayList();
         $e->add(1); //int
         $e->add(1.5); //float
         $e->add(true); //bool
@@ -106,7 +98,7 @@ class CollectionTest extends PlatineTestCase
     public function testUpdate()
     {
         $data = [1];
-        $e = new Collection($data);
+        $e = new ArrayList($data);
         $this->assertCount(1, $e->all());
         $this->assertContains(1, $e->all());
         $this->assertTrue($e->update(0, 2));
@@ -117,40 +109,23 @@ class CollectionTest extends PlatineTestCase
     public function testUpdateOutOfRange()
     {
         $this->expectException(InvalidOperationException::class);
-        $e = new Collection();
+        $e = new ArrayList();
         $e->update(0, 2);
     }
 
-    public function testGetType()
+    public function testDiffNotSameArrayList()
     {
-        $e = new Collection();
-        $this->assertEmpty($e->getType());
-        $et = new Collection([], 'bool');
-        $this->assertEquals('bool', $et->getType());
-    }
-
-    public function testDiffNotSameCollection()
-    {
-        $other = $this->getMockInstance(ArrayList::class);
+        $other = $this->getMockInstance(Collection::class);
 
         $this->expectException(InvalidOperationException::class);
-        $e = new Collection();
-        $e->diff($other);
-    }
-
-    public function testDiffNotSameType()
-    {
-        $other = $this->getMockInstance(TypedCollection::class, ['getType' => 'string']);
-
-        $this->expectException(InvalidOperationException::class);
-        $e = new Collection([], 'bool');
+        $e = new ArrayList();
         $e->diff($other);
     }
 
     public function testDiffSuccess()
     {
-        $e = new Collection([1, 2, 3]);
-        $other = new Collection([4, 5, 2]);
+        $e = new ArrayList([1, 2, 3]);
+        $other = new ArrayList([4, 5, 2]);
 
         $diff = $e->diff($other);
         $data = $diff->all();
@@ -160,72 +135,72 @@ class CollectionTest extends PlatineTestCase
         $this->assertEquals(3, $data[1]);
     }
 
-    public function testGetCollectionIsEmpty()
+    public function testDiffNotSameType()
     {
-        $this->expectException(OutOfRangeException::class);
-        $e = new Collection([]);
-        $e->get(0);
-    }
+        $e = new ArrayList([1, 2, 3]);
+        $other = new ArrayList(['a', 5, 2]);
 
-    public function testGetInvalidIndex()
-    {
-        $this->expectException(OutOfRangeException::class);
-        $e = new Collection([1]);
-        $e->get(1);
+        $diff = $e->diff($other);
+        $data = $diff->all();
+
+        $this->assertCount(3, $data);
+        $this->assertEquals(1, $data[0]);
+        $this->assertEquals(2, $data[1]);
+        $this->assertEquals(3, $data[2]);
     }
 
     public function testGetSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $this->assertEquals(1, $e->get(0));
         $this->assertEquals(2, $e->get(1));
         $this->assertEquals(3, $e->get(2));
     }
 
-    public function testFirstCollectionIsEmpty()
+    public function testFirstArrayListIsEmpty()
     {
         $this->expectException(OutOfRangeException::class);
-        $e = new Collection([]);
+        $e = new ArrayList([]);
         $e->first();
     }
 
     public function testFirstSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $this->assertEquals(1, $e->first());
     }
 
-    public function testLastCollectionIsEmpty()
+    public function testLastArrayListIsEmpty()
     {
         $this->expectException(OutOfRangeException::class);
-        $e = new Collection([]);
+        $e = new ArrayList([]);
         $e->last();
     }
 
     public function testLastSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $this->assertEquals(3, $e->last());
     }
 
-    public function testEqualsNotSameCollection()
+    public function testEqualsNotSameArrayList()
     {
-        $other = $this->getMockInstance(ArrayList::class);
+        $other = $this->getMockInstance(Collection::class);
 
         $this->expectException(InvalidOperationException::class);
-        $e = new Collection();
+        $e = new ArrayList();
         $e->equals($other);
     }
 
     public function testEqualsSuccess()
     {
-        $e = new Collection([1, 2, 3]);
-        $other1 = new Collection([3, 2, 1]);
-        $other2 = new Collection([2, 3]);
-        $other3 = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
+        $other1 = new ArrayList([3, 2, 1]);
+        $other2 = new ArrayList([2, 3]);
+        $other3 = new ArrayList([1, 2, 3]);
 
         $this->assertFalse($e->equals($other1));
         $this->assertFalse($e->equals($other2));
@@ -234,9 +209,9 @@ class CollectionTest extends PlatineTestCase
 
     public function testFilterNull()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
-        $res = $e->filter(function ($k, $v) {
+        $res = $e->filter(function ($v) {
             return $v > 5;
         });
 
@@ -245,9 +220,9 @@ class CollectionTest extends PlatineTestCase
 
     public function testFilterSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
-        $res = $e->filter(function ($k, $v) {
+        $res = $e->filter(function ($v) {
             return $v < 3;
         });
         $data = $res->all();
@@ -259,7 +234,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testForEachSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $sum = 0;
         $res = $e->forEach(function ($v, $k) use (&$sum) {
@@ -271,7 +246,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testMapNull()
     {
-        $e = new Collection();
+        $e = new ArrayList();
 
         $res = $e->map(function ($v) {
             return [];
@@ -282,7 +257,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testMapSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $res = $e->map(function ($v) {
             return $v * 2;
@@ -297,8 +272,8 @@ class CollectionTest extends PlatineTestCase
 
     public function testMerge()
     {
-        $e = new Collection([1, 2, 3]);
-        $other = new Collection([4, 5]);
+        $e = new ArrayList([1, 2, 3]);
+        $other = new ArrayList([4, 5]);
 
         $merge = $e->merge($other);
         $data = $merge->all();
@@ -311,39 +286,39 @@ class CollectionTest extends PlatineTestCase
         $this->assertEquals(5, $data[4]);
     }
 
-    public function testRandCollectionIsEmpty()
+    public function testRandArrayListIsEmpty()
     {
         $this->expectException(InvalidOperationException::class);
-        $e = new Collection([]);
+        $e = new ArrayList([]);
         $e->rand();
     }
 
     public function testRandSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $val = $e->rand();
 
         $this->assertContains($val, $e->all());
     }
 
-    public function testRemoveCollectionIsEmpty()
+    public function testRemoveArrayListIsEmpty()
     {
         $this->expectException(OutOfRangeException::class);
-        $e = new Collection([]);
+        $e = new ArrayList([]);
         $e->remove(0);
     }
 
     public function testRemoveInvalidIndex()
     {
         $this->expectException(OutOfRangeException::class);
-        $e = new Collection([1]);
+        $e = new ArrayList([1]);
         $e->remove(1);
     }
 
     public function testRemoveSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $e->remove(1);
 
@@ -356,7 +331,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testSliceNull()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $res = $e->slice(4);
 
@@ -365,7 +340,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testSliceDefaultLength()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $res = $e->slice(2);
 
@@ -377,7 +352,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testSliceCustomLength()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $res = $e->slice(2, 1);
 
@@ -389,7 +364,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testSliceNegativeOffset()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $res = $e->slice(-2);
 
@@ -402,7 +377,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testSliceCustomNegativeLength()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $res = $e->slice(1, -1);
 
@@ -418,7 +393,7 @@ class CollectionTest extends PlatineTestCase
 
         $mock_usort_to_false = true;
 
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $res = $e->sort(function ($a, $b) {
             return $a <=> $b;
@@ -429,7 +404,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testSortSuccess()
     {
-        $e = new Collection([1, 3, 2]);
+        $e = new ArrayList([1, 3, 2]);
 
         $res = $e->sort(function ($a, $b) {
             return $a <=> $b;
@@ -443,16 +418,16 @@ class CollectionTest extends PlatineTestCase
         $this->assertEquals(3, $data[2]);
     }
 
-    public function testReverseCollectionIsEmpty()
+    public function testReverseArrayListIsEmpty()
     {
         $this->expectException(InvalidOperationException::class);
-        $e = new Collection([]);
+        $e = new ArrayList([]);
         $e->reverse();
     }
 
     public function testReverseSuccess()
     {
-        $e = new Collection([1, 3, 2]);
+        $e = new ArrayList([1, 3, 2]);
 
         $res = $e->reverse();
 
@@ -467,7 +442,7 @@ class CollectionTest extends PlatineTestCase
     public function testSumReturnNonNumericValue()
     {
         $this->expectException(InvalidOperationException::class);
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
         $e->sum(function ($v) {
             return 'foo';
         });
@@ -475,7 +450,7 @@ class CollectionTest extends PlatineTestCase
 
     public function testSumSuccess()
     {
-        $e = new Collection([1, 2, 3]);
+        $e = new ArrayList([1, 2, 3]);
 
         $sum = $e->sum(function ($v) {
             return $v * 2;

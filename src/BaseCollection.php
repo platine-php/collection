@@ -68,7 +68,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
 
     /**
      * Create new instance
-     * @param array<mixed, mixed> $initials
+     * @param array<mixed, T> $initials
      */
     public function __construct(array $initials = [])
     {
@@ -86,7 +86,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
 
     /**
      * Check whether the collection has the given element
-     * @param mixed $needle
+     * @param T $needle
      * @return bool
      */
     public function contains($needle): bool
@@ -106,7 +106,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
 
     /**
      * Return the first element of collection
-     * @return mixed
+     * @return T
      */
     public function first()
     {
@@ -120,7 +120,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
 
     /**
      * Return the last element of collection
-     * @return mixed
+     * @return T
      */
     public function last()
     {
@@ -165,7 +165,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
 
     /**
      * Return the array representation of the collection
-     * @return array<mixed, mixed>
+     * @return array<mixed, T>
      */
     public function all(): array
     {
@@ -182,7 +182,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
 
     /**
      * {@inheritedoc}
-     * @return array<mixed, mixed>
+     * @return array<mixed, T>
      */
     public function jsonSerialize(): array
     {
@@ -213,8 +213,18 @@ abstract class BaseCollection implements Countable, JsonSerializable
 
     /**
      * Fill the collection
-     * @param array<mixed, mixed> $data
+     * @param array<mixed, T> $data
      * @return void
      */
     abstract public function fill(array $data): void;
+
+    /**
+     *
+     * @return void
+     */
+    protected function repopulate(): void
+    {
+        $oldData = array_values($this->all());
+        $this->data->setData($oldData);
+    }
 }

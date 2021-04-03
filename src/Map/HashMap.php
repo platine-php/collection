@@ -83,7 +83,7 @@ class HashMap extends BaseCollection implements
      * Create new instance
      * @param mixed $keyType
      * @param mixed $valueType
-     * @param array<mixed, mixed> $initials
+     * @param array<mixed, T> $initials
      */
     public function __construct($keyType, $valueType, array $initials = [])
     {
@@ -99,7 +99,10 @@ class HashMap extends BaseCollection implements
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param mixed $key
+     * @param T $value
+     * @return void
      */
     public function add($key, $value): void
     {
@@ -171,7 +174,7 @@ class HashMap extends BaseCollection implements
 
     /**
      *
-     * @param array<mixed, mixed> $data
+     * @param array<mixed, T> $data
      * @return void
      */
     public function fill(array $data): void
@@ -217,8 +220,11 @@ class HashMap extends BaseCollection implements
     }
 
      /**
-     * {@inheritedoc}
-     */
+      *
+      * @param HashMap<T> $collection
+      * @return bool
+      * @throws InvalidOperationException
+      */
     public function equals(BaseCollection $collection): bool
     {
         if (!$collection instanceof self) {
@@ -244,8 +250,10 @@ class HashMap extends BaseCollection implements
     }
 
      /**
-     * {@inheritedoc}
-     */
+      * Return the value for given key
+      * @param mixed $key
+      * @return T|null
+      */
     public function get($key)
     {
         return $this->data->offsetExists($key)
@@ -256,6 +264,7 @@ class HashMap extends BaseCollection implements
      /**
      * {@inheritedoc}
       * @param HashMap<T> $collection
+      * @return HashMap<T>
      */
     public function merge(BaseCollection $collection): BaseCollection
     {
@@ -284,6 +293,22 @@ class HashMap extends BaseCollection implements
         );
     }
 
+    /**
+     * {@inheritedoc}
+     */
+    public function first()
+    {
+        throw new InvalidOperationException('Can not call this method in map');
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function last()
+    {
+        throw new InvalidOperationException('Can not call this method in map');
+    }
+
      /**
      * {@inheritedoc}
      */
@@ -304,8 +329,11 @@ class HashMap extends BaseCollection implements
     }
 
      /**
-     * {@inheritedoc}
-     */
+      *
+      * @param int $offset
+      * @param int|null $length
+      * @return HashMap<T>|null
+      */
     public function slice(int $offset, ?int $length = null): ?BaseCollection
     {
         $newData = array_slice($this->all(), $offset, $length, true);
@@ -320,8 +348,10 @@ class HashMap extends BaseCollection implements
     }
 
      /**
-     * {@inheritedoc}
-     */
+      *
+      * @param callable $callback
+      * @return HashMap<T>|null
+      */
     public function sort(callable $callback): ?BaseCollection
     {
         $data = $this->all();
@@ -335,8 +365,12 @@ class HashMap extends BaseCollection implements
                 : null;
     }
 
-     /**
-     * {@inheritedoc}
+    /**
+     *
+     * @param mixed $key
+     * @param T $value
+     * @return bool
+     * @throws OutOfRangeException
      */
     public function update($key, $value): bool
     {
@@ -356,7 +390,7 @@ class HashMap extends BaseCollection implements
 
     /**
      *
-     * @return array<mixed, mixed>
+     * @return array<mixed, T>
      */
     public function all(): array
     {
@@ -374,7 +408,8 @@ class HashMap extends BaseCollection implements
      */
     public function toJson(): string
     {
-        $json = json_encode($this->data);
+        /* Thank to interface JsonSerializable */
+        $json = json_encode($this);
         return $json === false ? '' : $json;
     }
 
@@ -399,7 +434,7 @@ class HashMap extends BaseCollection implements
         );
 
         TypeCheck::isValueOf(
-            $key,
+            $value,
             $this->valueType,
             sprintf(
                 'The value type specified for this map is [%s], you cannot pass [%s]',

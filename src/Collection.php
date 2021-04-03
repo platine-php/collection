@@ -72,9 +72,12 @@ class Collection extends BaseCollection implements
     /**
      * Create new instance
      * @param array<mixed, mixed> $data
+     * @param string $type
      */
-    public function __construct(array $data = [])
+    public function __construct(array $data = [], string $type = '')
     {
+        $this->type = $type;
+
         foreach ($data as $value) {
             $this->validateEntry($value);
         }
@@ -171,7 +174,7 @@ class Collection extends BaseCollection implements
             }
         );
 
-        return new $this($diffValues);
+        return new $this(array_values($diffValues));
     }
 
     /**
@@ -203,7 +206,7 @@ class Collection extends BaseCollection implements
     {
         if (!$collection instanceof self) {
             throw new InvalidOperationException(
-                'You should only compare an object collection against another one'
+                'You should only compare a collection of the same type'
             );
         }
 
@@ -345,22 +348,24 @@ class Collection extends BaseCollection implements
     }
 
     /**
-     *
-     * @return void
-     */
-    protected function repopulate(): void
-    {
-        $oldData = array_values($this->all());
-        $this->data->setData($oldData);
-    }
-
-    /**
      * Validate the collection value type
      * @param mixed $value
      * @return bool
      */
     protected function validateEntry($value): bool
     {
+        if (!empty($this->type)) {
+            TypeCheck::isValueOf(
+                $value,
+                $this->type,
+                sprintf(
+                    'The type specified for this collection is '
+                        . '[%s], you cannot pass a value of type [%s]',
+                    $this->type,
+                    is_object($value) ? get_class($value) : gettype($value)
+                )
+            );
+        }
         return true;
     }
 }

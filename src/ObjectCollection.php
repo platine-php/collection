@@ -49,15 +49,15 @@ namespace Platine\Collection;
 /**
  * Class ObjectCollection
  * @package Platine\Collection
- * @template Object
- * @extends TypedCollection<Object>
+ *
+ * @extends TypedCollection<object>
  */
 class ObjectCollection extends TypedCollection
 {
 
     /**
      * Create new instance
-     * @param array<mixed, mixed> $data
+     * @param array<mixed, object> $data
      */
     public function __construct(array $data = [])
     {
