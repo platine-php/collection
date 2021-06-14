@@ -9,7 +9,7 @@ use OutOfRangeException;
 use Platine\Collection\Exception\InvalidOperationException;
 use Platine\Collection\Generic\ArrayList;
 use Platine\Collection\Map\HashMap;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * HashMap class tests

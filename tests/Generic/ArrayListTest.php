@@ -8,7 +8,7 @@ use OutOfRangeException;
 use Platine\Collection\Collection;
 use Platine\Collection\Exception\InvalidOperationException;
 use Platine\Collection\Generic\ArrayList;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 use stdClass;
 
 /**

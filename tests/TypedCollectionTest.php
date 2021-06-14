@@ -6,7 +6,7 @@ namespace Platine\Test\Collection;
 
 use InvalidArgumentException;
 use Platine\Collection\TypedCollection;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * TypedCollection class tests

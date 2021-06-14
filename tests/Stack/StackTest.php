@@ -7,7 +7,7 @@ namespace Platine\Test\Collection\Stack;
 use InvalidArgumentException;
 use Platine\Collection\Exception\InvalidOperationException;
 use Platine\Collection\Stack\Stack;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 
 /**

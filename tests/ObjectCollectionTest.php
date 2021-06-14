@@ -7,7 +7,7 @@ namespace Platine\Test\Collection;
 use InvalidArgumentException;
 use Platine\Collection\Collection;
 use Platine\Collection\ObjectCollection;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 use stdClass;
 
 /**

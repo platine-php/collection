@@ -10,7 +10,7 @@ use Platine\Collection\Collection;
 use Platine\Collection\Exception\InvalidOperationException;
 use Platine\Collection\Generic\ArrayList;
 use Platine\Collection\TypedCollection;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 use stdClass;
 
 /**
