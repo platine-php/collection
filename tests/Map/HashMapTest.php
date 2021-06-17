@@ -319,7 +319,7 @@ class HashMapTest extends PlatineTestCase
         $this->assertEquals('d', $data['c']);
         $this->assertEquals('f', $data['e']);
     }
-    
+
     public function testMergeNotSameKeyType()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -328,7 +328,7 @@ class HashMapTest extends PlatineTestCase
 
         $e->merge($other);
     }
-    
+
     public function testMergeNotSameValueType()
     {
         $this->expectException(InvalidArgumentException::class);
