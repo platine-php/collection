@@ -52,7 +52,6 @@ namespace Platine\Collection\Map;
  */
 interface MapInterface
 {
-
     /**
      * Add element to the collection
      * @param mixed $key

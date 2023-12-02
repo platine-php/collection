@@ -66,7 +66,6 @@ class HashMap extends BaseCollection implements
     MergeableInterface,
     SortableInterface
 {
-
     /**
      * The type of the key
      * @var mixed

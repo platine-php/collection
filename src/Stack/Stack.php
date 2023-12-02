@@ -56,7 +56,6 @@ use Platine\Collection\TypeCheck;
  */
 class Stack implements Countable
 {
-
     /**
      *
      * @var string

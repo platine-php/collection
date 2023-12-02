@@ -62,7 +62,6 @@ class Collection extends BaseCollection implements
     MergeableInterface,
     SortableInterface
 {
-
     /**
      * The type of this collection elements
      * @var string

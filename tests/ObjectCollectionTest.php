@@ -18,7 +18,6 @@ use stdClass;
  */
 class ObjectCollectionTest extends PlatineTestCase
 {
-
     public function testConstructorValidValue()
     {
         $data = [];

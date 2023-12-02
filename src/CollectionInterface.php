@@ -52,7 +52,6 @@ namespace Platine\Collection;
  */
 interface CollectionInterface
 {
-
     /**
      * Add element to the collection
      * @param mixed $value

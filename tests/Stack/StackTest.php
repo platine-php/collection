@@ -17,7 +17,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class StackTest extends PlatineTestCase
 {
-
     public function testConstructor()
     {
         $e = new Stack('string');

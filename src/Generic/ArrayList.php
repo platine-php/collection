@@ -68,7 +68,6 @@ class ArrayList extends BaseCollection implements
     MergeableInterface,
     SortableInterface
 {
-
     /**
      *
      * @param T $value

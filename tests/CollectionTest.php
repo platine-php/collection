@@ -21,7 +21,6 @@ use stdClass;
  */
 class CollectionTest extends PlatineTestCase
 {
-
     public function testConstructor()
     {
         $data = [1];

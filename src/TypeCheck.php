@@ -54,7 +54,6 @@ use InvalidArgumentException;
  */
 class TypeCheck
 {
-
     /**
      *
      * @param mixed $value1

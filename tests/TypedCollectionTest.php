@@ -16,7 +16,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class TypedCollectionTest extends PlatineTestCase
 {
-
     public function testConstructorValidValue()
     {
         $e = new TypedCollection('integer', [1, 3, 5]);

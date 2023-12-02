@@ -59,7 +59,6 @@ use IteratorAggregate;
  */
 class DataContainer implements ArrayAccess, IteratorAggregate
 {
-
     /**
      *
      * @var array<mixed, T>

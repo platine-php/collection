@@ -53,7 +53,6 @@ namespace Platine\Collection;
  */
 interface MergeableInterface
 {
-
     /**
      * Merge with the given collection
      * @param BaseCollection<T> $collection

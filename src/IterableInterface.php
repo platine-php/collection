@@ -52,7 +52,6 @@ namespace Platine\Collection;
  */
 interface IterableInterface
 {
-
     /**
      * Loop on each collection element with the given callback
      * @param callable $callback

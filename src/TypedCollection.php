@@ -54,7 +54,6 @@ namespace Platine\Collection;
  */
 class TypedCollection extends Collection
 {
-
     /**
      * Create new instance
      * @param string $type

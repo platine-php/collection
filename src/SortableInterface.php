@@ -53,7 +53,6 @@ namespace Platine\Collection;
  */
 interface SortableInterface
 {
-
     /**
      * Sort the collection
      * @param callable $callback

@@ -19,7 +19,6 @@ use stdClass;
  */
 class ArrayListTest extends PlatineTestCase
 {
-
     public function testConstructor()
     {
         $data = [1];

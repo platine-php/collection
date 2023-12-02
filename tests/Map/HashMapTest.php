@@ -19,7 +19,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class HashMapTest extends PlatineTestCase
 {
-
     public function testConstructor()
     {
         $data = ['a' => 'b'];

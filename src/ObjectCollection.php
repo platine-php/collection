@@ -54,7 +54,6 @@ namespace Platine\Collection;
  */
 class ObjectCollection extends TypedCollection
 {
-
     /**
      * Create new instance
      * @param array<mixed, object> $data

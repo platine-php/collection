@@ -52,7 +52,6 @@ namespace Platine\Collection\Map;
  */
 class Pair
 {
-
     /**
      *
      * @var mixed

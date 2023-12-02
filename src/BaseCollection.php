@@ -59,7 +59,6 @@ use ArrayIterator;
  */
 abstract class BaseCollection implements Countable, JsonSerializable
 {
-
     /**
      * The data container instance
      * @var DataContainer<T>
