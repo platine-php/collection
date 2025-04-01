@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Collection;
 
 /**
- * Class SortableInterface
+ * @class SortableInterface
  * @package Platine\Collection
  * @template T
  */

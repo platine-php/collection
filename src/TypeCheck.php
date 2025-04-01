@@ -49,7 +49,7 @@ namespace Platine\Collection;
 use InvalidArgumentException;
 
 /**
- * Class TypeCheck
+ * @class TypeCheck
  * @package Platine\Collection
  */
 class TypeCheck
@@ -61,7 +61,7 @@ class TypeCheck
      * @param string $message
      * @return bool
      */
-    public static function isEqual($value1, $value2, string $message): bool
+    public static function isEqual(mixed $value1, mixed $value2, string $message): bool
     {
         if ($value1 !== $value2) {
             throw new InvalidArgumentException($message);
@@ -77,7 +77,7 @@ class TypeCheck
      * @param string $message
      * @return bool
      */
-    public static function isValueOf($value, string $type, string $message): bool
+    public static function isValueOf(mixed $value, string $type, string $message): bool
     {
         if (
             (is_object($value) && $value instanceof $type)

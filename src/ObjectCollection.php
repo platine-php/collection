@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Collection;
 
 /**
- * Class ObjectCollection
+ * @class ObjectCollection
  * @package Platine\Collection
  *
  * @extends TypedCollection<object>

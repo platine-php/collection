@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Collection;
 
 /**
- * Class MergeableInterface
+ * @class MergeableInterface
  * @package Platine\Collection
  * @template T
  */

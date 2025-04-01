@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Collection\Map;
 
 /**
- * Class MapInterface
+ * @class MapInterface
  * @package Platine\Collection\Map
  */
 interface MapInterface
@@ -58,21 +58,21 @@ interface MapInterface
      * @param mixed $value
      * @return void
      */
-    public function add($key, $value): void;
+    public function add(mixed $key, mixed $value): void;
 
     /**
      * Get the element for the given key
      * @param mixed $key
      * @return mixed
      */
-    public function get($key);
+    public function get(mixed $key): mixed;
 
     /**
      * Remove the element for the given key
      * @param mixed $key
      * @return void
      */
-    public function remove($key): void;
+    public function remove(mixed $key): void;
 
     /**
      * Update the element
@@ -80,5 +80,5 @@ interface MapInterface
      * @param mixed $value
      * @return bool
      */
-    public function update($key, $value): bool;
+    public function update(mixed $key, mixed $value): bool;
 }

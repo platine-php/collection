@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Collection;
 
 /**
- * Class CollectionInterface
+ * @class CollectionInterface
  * @package Platine\Collection
  */
 interface CollectionInterface
@@ -57,14 +57,14 @@ interface CollectionInterface
      * @param mixed $value
      * @return void
      */
-    public function add($value): void;
+    public function add(mixed $value): void;
 
     /**
      * Get the element at the given index
      * @param int $offset
      * @return mixed
      */
-    public function get(int $offset);
+    public function get(int $offset): mixed;
 
     /**
      * Remove the element at the given index
@@ -79,5 +79,5 @@ interface CollectionInterface
      * @param mixed $value
      * @return bool
      */
-    public function update(int $offset, $value): bool;
+    public function update(int $offset, mixed $value): bool;
 }

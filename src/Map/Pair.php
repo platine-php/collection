@@ -47,39 +47,25 @@ declare(strict_types=1);
 namespace Platine\Collection\Map;
 
 /**
- * Class Pair
+ * @class Pair
  * @package Platine\Collection\Map
  */
 class Pair
 {
     /**
-     *
-     * @var mixed
-     */
-    protected $key;
-
-    /**
-     *
-     * @var mixed
-     */
-    protected $value;
-
-    /**
      * Create new instance
      * @param mixed $key
      * @param mixed $value
      */
-    public function __construct($key, $value)
+    public function __construct(protected mixed $key, protected mixed $value)
     {
-        $this->key = $key;
-        $this->value = $value;
     }
 
     /**
      *
      * @return mixed
      */
-    public function getKey()
+    public function getKey(): mixed
     {
         return $this->key;
     }
@@ -88,7 +74,7 @@ class Pair
      *
      * @return mixed
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -98,7 +84,7 @@ class Pair
      * @param mixed $value
      * @return $this
      */
-    public function setValue($value): self
+    public function setValue(mixed $value): self
     {
         $this->value = $value;
 

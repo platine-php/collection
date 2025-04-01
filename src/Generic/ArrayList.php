@@ -55,7 +55,7 @@ use Platine\Collection\MergeableInterface;
 use Platine\Collection\SortableInterface;
 
 /**
- * Class ArrayList
+ * @class ArrayList
  * @package Platine\Collection\Generic
  * @template T
  * @extends BaseCollection<T>
@@ -73,7 +73,7 @@ class ArrayList extends BaseCollection implements
      * @param T $value
      * @return void
      */
-    public function add($value): void
+    public function add(mixed $value): void
     {
         $data = $this->all();
 
@@ -95,7 +95,7 @@ class ArrayList extends BaseCollection implements
 
     /**
      *
-     * @param ArrayList<T> $collection
+     * @param BaseCollection<T> $collection
      * @return ArrayList<T>
      * @throws InvalidOperationException
      */
@@ -124,7 +124,7 @@ class ArrayList extends BaseCollection implements
 
     /**
      *
-     * @param ArrayList<T> $collection
+     * @param BaseCollection<T> $collection
      * @return bool
      * @throws InvalidOperationException
      */
@@ -156,7 +156,7 @@ class ArrayList extends BaseCollection implements
         }
 
         return count($matches) > 0
-                ? new $this(array_values($matches))
+                ? new $this($matches)
                 : null;
     }
 
@@ -176,7 +176,7 @@ class ArrayList extends BaseCollection implements
      * @param int $offset
      * @return T|null
      */
-    public function get(int $offset)
+    public function get(int $offset): mixed
     {
         return $this->data->offsetGet($offset);
     }
@@ -210,7 +210,7 @@ class ArrayList extends BaseCollection implements
      * @return T|null
      * @throws InvalidOperationException
      */
-    public function rand()
+    public function rand(): mixed
     {
         if ($this->isEmpty()) {
             throw new InvalidOperationException('The collection is empty');
@@ -291,7 +291,7 @@ class ArrayList extends BaseCollection implements
      * @return bool
      * @throws InvalidOperationException
      */
-    public function update(int $offset, $value): bool
+    public function update(int $offset, mixed $value): bool
     {
         if (!$this->exists($offset)) {
             throw new InvalidOperationException(sprintf(

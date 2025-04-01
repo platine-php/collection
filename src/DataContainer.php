@@ -51,7 +51,7 @@ use ArrayIterator;
 use IteratorAggregate;
 
 /**
- * Class DataContainer
+ * @class DataContainer
  * @package Platine\Collection
  * @template T
  * @implements ArrayAccess<mixed, T>
@@ -60,23 +60,16 @@ use IteratorAggregate;
 class DataContainer implements ArrayAccess, IteratorAggregate
 {
     /**
-     *
-     * @var array<mixed, T>
-     */
-    protected array $data = [];
-
-    /**
      * Create new instance
-     * @param array<mixed, T> $data
+     * @param array<int|string, T> $data
      */
-    public function __construct(array $data = [])
+    public function __construct(protected array $data = [])
     {
-        $this->data = $data;
     }
 
     /**
      * Return the data in the container
-     * @return array<mixed, T>
+     * @return array<int|string, T>
      */
     public function getData(): array
     {
@@ -85,7 +78,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
 
     /**
      * Set the data container
-     * @param array<mixed, T> $data
+     * @param array<int|string, T> $data
      * @return $this
      */
     public function setData(array $data): self
@@ -98,7 +91,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
 
     /**
      *
-     * @return ArrayIterator<mixed, T>
+     * @return ArrayIterator<int|string, T>
      */
     public function getIterator(): ArrayIterator
     {
@@ -110,7 +103,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->data[$offset]);
     }
@@ -120,7 +113,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
      * @param mixed $offset
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return isset($this->data[$offset])
                 ? $this->data[$offset]
@@ -133,7 +126,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
      * @param mixed $value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->data[$offset] = $value;
     }
@@ -143,7 +136,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
      * @param mixed $offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->data[$offset]);
     }

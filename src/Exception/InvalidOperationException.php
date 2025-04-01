@@ -35,7 +35,7 @@ namespace Platine\Collection\Exception;
 use Exception;
 
 /**
- * Class InvalidOperationException
+ * @class InvalidOperationException
  * @package Platine\Collection\Exception
  */
 class InvalidOperationException extends Exception

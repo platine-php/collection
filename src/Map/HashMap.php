@@ -54,7 +54,7 @@ use Platine\Collection\SortableInterface;
 use Platine\Collection\TypeCheck;
 
 /**
- * Class HashMap
+ * @class HashMap
  * @package Platine\Collection\Map
  * @template T
  * @extends BaseCollection<T>
@@ -67,28 +67,16 @@ class HashMap extends BaseCollection implements
     SortableInterface
 {
     /**
-     * The type of the key
-     * @var mixed
-     */
-    protected $keyType;
-
-    /**
-     * The type of the value
-     * @var mixed
-     */
-    protected $valueType;
-
-    /**
      * Create new instance
      * @param mixed $keyType
      * @param mixed $valueType
      * @param array<mixed, T> $initials
      */
-    public function __construct($keyType, $valueType, array $initials = [])
-    {
-        $this->keyType = $keyType;
-        $this->valueType = $valueType;
-
+    public function __construct(
+        protected mixed $keyType,
+        protected mixed $valueType,
+        array $initials = []
+    ) {
         foreach ($initials as $key => $value) {
             $this->validateEntry($key, $value);
         }
@@ -103,7 +91,7 @@ class HashMap extends BaseCollection implements
      * @param T $value
      * @return void
      */
-    public function add($key, $value): void
+    public function add(mixed $key, mixed $value): void
     {
         $this->validateEntry($key, $value);
         $this->data->offsetSet($key, new Pair($key, $value));
@@ -111,7 +99,7 @@ class HashMap extends BaseCollection implements
 
     /**
      *
-     * @param HashMap<T> $collection
+     * @param BaseCollection<T> $collection
      * @return HashMap<T>
      * @throws InvalidOperationException
      */
@@ -157,7 +145,7 @@ class HashMap extends BaseCollection implements
      * Return the type of the key
      * @return mixed
      */
-    public function getKeyType()
+    public function getKeyType(): mixed
     {
         return $this->keyType;
     }
@@ -166,7 +154,7 @@ class HashMap extends BaseCollection implements
      * Return the type of the value
      * @return mixed
      */
-    public function getValueType()
+    public function getValueType(): mixed
     {
         return $this->valueType;
     }
@@ -192,7 +180,7 @@ class HashMap extends BaseCollection implements
     {
         $matches = [];
 
-        foreach ($this->data as $key => $value) {
+        foreach ($this->data as $value) {
             $val = call_user_func($callback, $value->getKey(), $value->getValue());
             if ($val === true) {
                 $matches[$value->getKey()] = $value->getValue();
@@ -220,7 +208,7 @@ class HashMap extends BaseCollection implements
 
      /**
       *
-      * @param HashMap<T> $collection
+      * @param BaseCollection<T> $collection
       * @return bool
       * @throws InvalidOperationException
       */
@@ -253,7 +241,7 @@ class HashMap extends BaseCollection implements
       * @param mixed $key
       * @return T|null
       */
-    public function get($key)
+    public function get(mixed $key): mixed
     {
         return $this->data->offsetExists($key)
                ? $this->data->offsetGet($key)->getValue()
@@ -295,7 +283,7 @@ class HashMap extends BaseCollection implements
     /**
      * {@inheritedoc}
      */
-    public function first()
+    public function first(): mixed
     {
         throw new InvalidOperationException('Can not call this method in map');
     }
@@ -303,7 +291,7 @@ class HashMap extends BaseCollection implements
     /**
      * {@inheritedoc}
      */
-    public function last()
+    public function last(): mixed
     {
         throw new InvalidOperationException('Can not call this method in map');
     }
@@ -311,7 +299,7 @@ class HashMap extends BaseCollection implements
      /**
      * {@inheritedoc}
      */
-    public function remove($key): void
+    public function remove(mixed $key): void
     {
         if ($this->isEmpty()) {
             throw new OutOfRangeException('The collection is empty');
@@ -371,7 +359,7 @@ class HashMap extends BaseCollection implements
      * @return bool
      * @throws OutOfRangeException
      */
-    public function update($key, $value): bool
+    public function update(mixed $key, mixed $value): bool
     {
         $this->validateEntry($key, $value);
 
@@ -420,7 +408,7 @@ class HashMap extends BaseCollection implements
      *
      * @return bool
      */
-    protected function validateEntry($key, $value): bool
+    protected function validateEntry(mixed $key, mixed $value): bool
     {
         TypeCheck::isValueOf(
             $key,

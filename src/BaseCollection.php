@@ -50,10 +50,9 @@ use Countable;
 use JsonSerializable;
 use OutOfRangeException;
 use Platine\Collection\Exception\InvalidOperationException;
-use ArrayIterator;
 
 /**
- * Class BaseCollection
+ * @class BaseCollection
  * @package Platine\Collection
  * @template T
  */
@@ -88,7 +87,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
      * @param T $needle
      * @return bool
      */
-    public function contains($needle): bool
+    public function contains(mixed $needle): bool
     {
         return in_array($needle, $this->all());
     }
@@ -98,7 +97,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
      * @param mixed $offset
      * @return bool
      */
-    public function exists($offset): bool
+    public function exists(mixed $offset): bool
     {
         return $this->data->offsetExists($offset);
     }
@@ -107,7 +106,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
      * Return the first element of collection
      * @return T
      */
-    public function first()
+    public function first(): mixed
     {
         if ($this->isEmpty()) {
             throw new OutOfRangeException('The collection is empty');
@@ -121,7 +120,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
      * Return the last element of collection
      * @return T
      */
-    public function last()
+    public function last(): mixed
     {
         if ($this->isEmpty()) {
             throw new OutOfRangeException('The collection is empty');
@@ -191,7 +190,7 @@ abstract class BaseCollection implements Countable, JsonSerializable
     /**
      * Return the different with the given collection
      * @param BaseCollection<T> $collection
-     * @return $this<T>
+     * @return $this
      */
     abstract public function diff(BaseCollection $collection): self;
 

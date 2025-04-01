@@ -50,7 +50,7 @@ use OutOfRangeException;
 use Platine\Collection\Exception\InvalidOperationException;
 
 /**
- * Class Collection
+ * @class Collection
  * @package Platine\Collection
  * @template T
  * @extends BaseCollection<T>
@@ -63,20 +63,12 @@ class Collection extends BaseCollection implements
     SortableInterface
 {
     /**
-     * The type of this collection elements
-     * @var string
-     */
-    protected string $type = '';
-
-    /**
      * Create new instance
      * @param array<mixed, mixed> $data
-     * @param string $type
+     * @param string $type The type of this collection elements
      */
-    public function __construct(array $data = [], string $type = '')
+    public function __construct(array $data = [], protected string $type = '')
     {
-        $this->type = $type;
-
         foreach ($data as $value) {
             $this->validateEntry($value);
         }
@@ -101,7 +93,7 @@ class Collection extends BaseCollection implements
      * @param mixed $value
      * @return void
      */
-    public function add($value): void
+    public function add(mixed $value): void
     {
         $this->validateEntry($value);
 
@@ -117,7 +109,7 @@ class Collection extends BaseCollection implements
      * @return bool
      * @throws InvalidOperationException
      */
-    public function update(int $offset, $value): bool
+    public function update(int $offset, mixed $value): bool
     {
         $this->validateEntry($value);
 
@@ -144,8 +136,8 @@ class Collection extends BaseCollection implements
 
     /**
      *
-     * @param Collection<T> $collection
-     * @return $this<T>
+     * @param BaseCollection<T> $collection
+     * @return $this
      * @throws InvalidOperationException
      */
     public function diff(BaseCollection $collection): self
@@ -182,7 +174,7 @@ class Collection extends BaseCollection implements
      * @return mixed
      * @throws OutOfRangeException
      */
-    public function get(int $offset)
+    public function get(int $offset): mixed
     {
         if ($this->isEmpty()) {
             throw new OutOfRangeException('The collection is empty');
@@ -229,7 +221,7 @@ class Collection extends BaseCollection implements
         }
 
         return count($matches) > 0
-                ? new $this(array_values($matches))
+                ? new $this($matches)
                 : null;
     }
 
@@ -270,7 +262,7 @@ class Collection extends BaseCollection implements
      * Return a random element of the collection
      * @return mixed
      */
-    public function rand()
+    public function rand(): mixed
     {
         if ($this->isEmpty()) {
             throw new InvalidOperationException('The collection is empty');
@@ -308,7 +300,7 @@ class Collection extends BaseCollection implements
      *
      * @param int $offset
      * @param int|null $length
-     * @return $this<T>|null
+     * @return $this|null
      */
     public function slice(int $offset, ?int $length = null): ?self
     {
@@ -351,7 +343,7 @@ class Collection extends BaseCollection implements
      * @param mixed $value
      * @return bool
      */
-    protected function validateEntry($value): bool
+    protected function validateEntry(mixed $value): bool
     {
         if (!empty($this->type)) {
             TypeCheck::isValueOf(

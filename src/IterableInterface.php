@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Collection;
 
 /**
- * Class IterableInterface
+ * @class IterableInterface
  * @package Platine\Collection
  */
 interface IterableInterface

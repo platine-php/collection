@@ -51,31 +51,23 @@ use Platine\Collection\Exception\InvalidOperationException;
 use Platine\Collection\TypeCheck;
 
 /**
- * Class Stack
+ * @class Stack
  * @package Platine\Collection\Stack
  */
 class Stack implements Countable
 {
     /**
      *
-     * @var string
-     */
-    protected string $type;
-
-    /**
-     *
      * @var array<int, mixed>
      */
-    protected array $data;
+    protected array $data = [];
 
     /**
      * Create new instance
      * @param string $type
      */
-    public function __construct(string $type)
+    public function __construct(protected string $type)
     {
-        $this->data = [];
-        $this->type = $type;
     }
 
     /**
@@ -107,7 +99,7 @@ class Stack implements Countable
     /**
      * @return mixed
      */
-    public function peek()
+    public function peek(): mixed
     {
         if ($this->isEmpty()) {
             throw new InvalidOperationException('The collection is empty');
@@ -120,7 +112,7 @@ class Stack implements Countable
      *
      * @return mixed
      */
-    public function pop()
+    public function pop(): mixed
     {
         return array_pop($this->data);
     }
@@ -131,7 +123,7 @@ class Stack implements Countable
      * @param mixed $value
      * @return mixed
      */
-    public function push($value)
+    public function push(mixed $value): mixed
     {
         TypeCheck::isValueOf(
             $value,

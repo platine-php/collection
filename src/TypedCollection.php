@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Collection;
 
 /**
- * Class TypedCollection
+ * @class TypedCollection
  * @package Platine\Collection
  * @template T
  * @extends Collection<T>
@@ -59,7 +59,7 @@ class TypedCollection extends Collection
      * @param string $type
      * @param array<mixed, T> $data
      */
-    public function __construct(string $type, array $data = [])
+    public function __construct(protected string $type, array $data = [])
     {
         parent::__construct($data, $type);
     }
@@ -67,7 +67,7 @@ class TypedCollection extends Collection
     /**
      * {@inheritedoc}
      */
-    protected function validateEntry($value): bool
+    protected function validateEntry(mixed $value): bool
     {
         TypeCheck::isValueOf(
             $value,
