@@ -120,6 +120,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate
      * @param mixed $offset
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return isset($this->data[$offset])
